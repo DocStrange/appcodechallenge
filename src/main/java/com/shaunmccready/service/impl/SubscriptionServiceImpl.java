@@ -83,15 +83,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             String eventDetailsString = appDirectConnectionService.getEventDetails(incomingUrl);
             EventDTO eventInformation = getEventDtoFromString(eventDetailsString);
             AccountDTO account = accountService.cancelAccount(eventInformation);
-            //userService.createUser(eventInformation, account);
 
-           // responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
+            responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
         } catch (EventException e) {
-            //responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
+            responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
         }
 
-        return null;
-//        return responseDTO;
+        return responseDTO;
     }
 
 
@@ -99,4 +97,5 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public ResponseDTO changeSubscription(String imcomingUrl) {
         return null;
     }
+
 }
