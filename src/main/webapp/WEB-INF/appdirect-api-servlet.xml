@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+ http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context-4.0.xsd
+ http://www.springframework.org/schema/mvc
+ http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+ http://www.springframework.org/schema/data/jpa
+ http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+
+    <context:property-placeholder location="classpath:*.properties"/>
+
+    <!-- AUTOMATICALLY DISCOVER BEANS AND DECLARE THEM, BY READING THE CLASSES ANNOTATED WITH @Component, @Controller, etc -->
+    <context:component-scan base-package="com.shaunmccready">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+
+    <!-- ALLOWS SCANNING OF @CONFIGURATION CLASSES -->
+    <context:annotation-config />
+
+    <!-- DISCOVER ALL JPA REPOSITORIES -->
+    <jpa:repositories base-package="com.shaunmccready.repository"/>
+
+    <!--  THESE TWO LINES ALLOW REQUESTMAPPING AND MVC RELATED ANNOTATIONS TO WORK-->
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler />
+
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+
+    <!-- DOZER BEAN MAPPER -->
+    <bean id="dozerBeanMapper" class="org.dozer.DozerBeanMapper" scope="singleton">
+        <property name="mappingFiles">
+            <value>dozer-configuration.xml</value>
+        </property>
+    </bean>
+
+
+    <!-- POSTGRESQL CONFIG -->
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+        <property name="driverClassName" value="${database.hibernate.driver.class}" />
+        <property name="url" value="${database.hibernate.url}" />
+        <property name="username" value="${database.hibernate.username}" />
+        <property name="password" value="${database.hibernate.password}" />
+        <property name="initialSize" value="${database.hibernate.initialSize}" />
+        <property name="maxActive" value="${database.hibernate.maxActive}" />
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan" value="com.shaunmccready.entity"/>
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="${database.hibernate.dialect}" />
+                <property name="showSql" value="${database.hibernate.show_sql}" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"></property>
+    </bean>
+
+
+</beans>

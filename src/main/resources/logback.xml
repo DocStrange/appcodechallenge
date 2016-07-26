@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!-- Indicates exactly where to pull the properties from -->
+    <property resource="application.properties" />
+
+    <!-- propagates changes made to the level of any logback-classic logger onto the java.util.logging framework -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <!-- reset all previous level configurations of all j.u.l. loggers. However, previously installed handlers will be left untouched -->
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- This appender writes to the console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%date] %-5level [%thread] %logger{36}.%M - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- This appender writes to a file as specified by fileNamePattern -->
+    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.file.location}stock_exchange_api.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.file.location}appdirect_api.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>[%date] %-5level [%thread] %logger{36}.%M - %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- LOGS everything starting from this package and down -->
+    <logger name="com.shaunmccready" level="${log.level}">
+    </logger>
+
+    <!-- THE DEFAULT LOGGING OPTIONS -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="dailyRollingFileAppender" />
+    </root>
+
+</configuration>
