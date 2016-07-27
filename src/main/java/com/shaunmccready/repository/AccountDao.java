@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountDao extends GenericDao<Account, Integer> {
 
-    Account findByUuidIgnoreCase(String uuid);
+    Account findByAccountIdentifierIgnoreCase(String uuid);
 
 }

@@ -35,6 +35,8 @@ public class UserDTO extends GenericDTO{
 
     private String zip;
 
+    private Boolean owner;
+
     private Integer accountId;
 
     private AccountDTO accountDTO;
@@ -153,6 +155,14 @@ public class UserDTO extends GenericDTO{
 
     public void setZip(String zip) {
         this.zip = zip;
+    }
+
+    public Boolean getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Boolean owner) {
+        this.owner = owner;
     }
 
     public Integer getAccountId() {

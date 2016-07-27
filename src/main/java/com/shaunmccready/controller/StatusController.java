@@ -20,9 +20,9 @@ public class StatusController {
 
     @RequestMapping( method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public StatusDTO getStatusList(){
-
+        //TODO: Return All statuses
         return null;
-                //return "Normally this will return all the Status's";
+
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

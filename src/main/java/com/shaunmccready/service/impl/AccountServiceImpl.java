@@ -5,20 +5,25 @@ import com.shaunmccready.dto.EventDTO;
 import com.shaunmccready.entity.Account;
 import com.shaunmccready.entity.ErrorCodes;
 import com.shaunmccready.entity.Status;
+import com.shaunmccready.entity.User;
 import com.shaunmccready.exception.EventException;
 import com.shaunmccready.mapper.AccountMapper;
 import com.shaunmccready.repository.AccountDao;
 import com.shaunmccready.repository.StatusDao;
+import com.shaunmccready.repository.UserDao;
 import com.shaunmccready.service.AccountService;
+import com.shaunmccready.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
@@ -32,18 +37,21 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private StatusDao statusDao;
 
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private UserDao userDao;
+
+    @Transactional(rollbackFor = EventException.class)
     public AccountDTO createAccount(EventDTO eventDTO) throws EventException {
-        if(eventDTOContainsNulls(eventDTO)){
-            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
+        if(EventDTO.eventDTOContainsNulls(eventDTO, eventDTO.getCreator())){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
         }
 
-        Account uuidCheck = accountDao.findByUuidIgnoreCase(eventDTO.getPayload().getCompany().getUuid());
-        if (null != uuidCheck){
-            LOGGER.info("The account with uuid:[" + uuidCheck.getUuid() +
-                    "] already exists in the system. Instead of creating a subscription, you should assign this user to the account");
-            throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(),"The account with uuid:[" + uuidCheck.getUuid() +
-                    "] already exists in the system. Instead of creating a subscription, you should assign this user to the account");
+        if(userService.userExists(eventDTO.getCreator().getUuid())){
+            throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(), "The user with UUID:[" + eventDTO.getCreator().getUuid() +
+                    "] already exists in the system");
         }
 
         Status status = statusDao.findByName("ACTIVE");
@@ -54,17 +62,24 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+    @Transactional(rollbackFor = EventException.class)
     public AccountDTO cancelAccount(EventDTO eventDTO) throws EventException {
-        if(eventDTOContainsNulls(eventDTO)){
-            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
+        if(EventDTO.eventDTOContainsNulls(eventDTO.getPayload().getAccount(), eventDTO.getCreator())){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account cancellation");
         }
 
-        Account uuidCheck = accountDao.findByUuidIgnoreCase(eventDTO.getPayload().getCompany().getUuid());
+        Account uuidCheck = accountDao.findByAccountIdentifierIgnoreCase(eventDTO.getPayload().getAccount().getAccountIdentifier());
         if (null == uuidCheck){
-            LOGGER.info("The account with uuid:[" + eventDTO.getPayload().getCompany().getUuid() +
+            LOGGER.info("The account with uuid:[" + eventDTO.getPayload().getAccount().getAccountIdentifier() +
                     "] does not exists in the system.");
             throw new EventException(ErrorCodes.ACCOUNT_NOT_FOUND.getErrorCode(),"The account with uuid:[" +
-                    eventDTO.getPayload().getCompany().getUuid() + "] does not exists in the system.");
+                    eventDTO.getPayload().getAccount().getAccountIdentifier() + "] does not exists in the system.");
+        }
+
+        User owner = userDao.findByUuid(eventDTO.getCreator().getUuid());
+        if(!String.valueOf(owner.getAccountId()).equals(uuidCheck.getAccountIdentifier())){
+            throw new EventException(ErrorCodes.UNAUTHORIZED.getErrorCode(), "Action not permitted. " +
+                    "The user trying to cancel the subscription is not the owner of this account.");
         }
 
         Status status = statusDao.findByName("CANCELLED");
@@ -75,6 +90,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+    @Transactional(rollbackFor = EventException.class)
     public AccountDTO changeAccount(EventDTO eventDTO) throws EventException {
         return null;
     }
@@ -88,7 +104,7 @@ public class AccountServiceImpl implements AccountService {
      */
     private Account createNewAccount(Integer statusId) {
         Account account = new Account();
-        account.setUuid(UUID.randomUUID().toString());
+        account.setAccountIdentifier(UUID.randomUUID().toString());
         account.setNumberOfUsers(-1);
         account.setStatusId(statusId);
         account.setModified(new Date());
@@ -97,23 +113,6 @@ public class AccountServiceImpl implements AccountService {
         return account;
     }
 
-
-
-
-    /**
-     * Helper method to make sure there are no null fields which cause exceptions
-     *
-     * @param eventDTO  the event object containing the details
-     * @return boolean  whether it contains null objects or not
-     */
-    private boolean eventDTOContainsNulls(EventDTO eventDTO) {
-        if(null == eventDTO || null == eventDTO.getCreator() || null == eventDTO.getMarketplace() || null == eventDTO.getPayload() ||
-                null == eventDTO.getCreator().getAddress() || null == eventDTO.getPayload().getCompany() || null == eventDTO.getPayload().getOrder()){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
 
 }

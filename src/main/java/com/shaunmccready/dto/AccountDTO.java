@@ -10,7 +10,9 @@ public class AccountDTO extends GenericDTO {
 
     private Integer numberOfUsers;
 
-    private String uuid;
+    private String accountIdentifier;
+
+    private String status;
 
     private Integer statusId;
 
@@ -40,12 +42,20 @@ public class AccountDTO extends GenericDTO {
         this.numberOfUsers = numberOfUsers;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getAccountIdentifier() {
+        return accountIdentifier;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setAccountIdentifier(String uuid) {
+        this.accountIdentifier = uuid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Integer getStatusId() {

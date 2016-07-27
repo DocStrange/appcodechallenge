@@ -59,6 +59,7 @@ CREATE TABLE account.user
   street2             TEXT,
   zip                 character varying(10),
   account_id          INTEGER,
+  owner               boolean,
   modified            TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   created             TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   CONSTRAINT user_id_pk PRIMARY KEY (user_id),

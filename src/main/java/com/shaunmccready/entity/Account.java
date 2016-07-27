@@ -18,7 +18,7 @@ public class Account implements GenericEntity{
      */
     private Integer numberOfUsers;
 
-    private String uuid;
+    private String accountIdentifier;
 
     private Integer statusId;
 
@@ -52,12 +52,12 @@ public class Account implements GenericEntity{
     }
 
     @Column(name = "uuid")
-    public String getUuid() {
-        return uuid;
+    public String getAccountIdentifier() {
+        return accountIdentifier;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setAccountIdentifier(String uuid) {
+        this.accountIdentifier = uuid;
     }
 
     @Column(name = "status_id")

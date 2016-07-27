@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -22,6 +23,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 
 @Service
+@Transactional(readOnly = true)
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
@@ -35,12 +37,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private UserService userService;
 
-    /**
-     * Creating a brand new subscription
-     *
-     * @param incomingUrl
-     * @return
-     */
+
+    @Transactional(rollbackFor = EventException.class)
     public ResponseDTO createSubscription(String incomingUrl)  {
         ResponseDTO responseDTO;
 
@@ -52,7 +50,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
         } catch (EventException e) {
-            responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
+                responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(), e.getMessage());
         }
 
         return responseDTO;
@@ -76,6 +74,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
+    @Transactional(rollbackFor = EventException.class)
     public ResponseDTO cancelSubscription(String incomingUrl) {
         ResponseDTO responseDTO;
 
@@ -83,8 +82,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             String eventDetailsString = appDirectConnectionService.getEventDetails(incomingUrl);
             EventDTO eventInformation = getEventDtoFromString(eventDetailsString);
             AccountDTO account = accountService.cancelAccount(eventInformation);
+            userService.deleteUser(eventInformation);
 
-            responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
+            responseDTO = ResponseDTO.buildSuccessResponse(account.getAccountIdentifier().toString(), "Subscription created!");
         } catch (EventException e) {
             responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
         }
@@ -93,9 +93,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
-    @Override
-    public ResponseDTO changeSubscription(String imcomingUrl) {
-        return null;
+    @Transactional(rollbackFor = EventException.class)
+    public ResponseDTO changeSubscription(String incomingUrl) {
+        ResponseDTO responseDTO = null;
+
+        try {
+            String eventDetailsString = appDirectConnectionService.getEventDetails(incomingUrl);
+            EventDTO eventInformation = getEventDtoFromString(eventDetailsString);
+            AccountDTO account = accountService.changeAccount(eventInformation);
+
+            //responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
+        } catch (EventException e) {
+            //responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
+        }
+
+        return responseDTO;
     }
 
 }

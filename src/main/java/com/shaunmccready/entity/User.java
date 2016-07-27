@@ -38,6 +38,8 @@ public class User implements GenericEntity{
 
     private String zip;
 
+    private Boolean owner;
+
     private Integer accountId;
 
     private Account account;
@@ -174,6 +176,15 @@ public class User implements GenericEntity{
 
     public void setZip(String zip) {
         this.zip = zip;
+    }
+
+    @Column(name = "owner")
+    public Boolean getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Boolean owner) {
+        this.owner = owner;
     }
 
     @Column(name = "account_id")

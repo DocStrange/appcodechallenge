@@ -3,9 +3,19 @@ package com.shaunmccready.dto;
 
 public class PayloadDTO {
 
+    private AccountDTO account;
+
     private CompanyDTO company;
 
     private OrderDTO order;
+
+    public AccountDTO getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountDTO account) {
+        this.account = account;
+    }
 
     public CompanyDTO getCompany() {
         return company;

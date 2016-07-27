@@ -10,13 +10,14 @@ import com.shaunmccready.exception.EventException;
 import com.shaunmccready.mapper.UserMapper;
 import com.shaunmccready.repository.UserDao;
 import com.shaunmccready.service.UserService;
-import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -27,46 +28,88 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional(rollbackFor = EventException.class)
     public UserDTO createUser(EventDTO eventInformation, AccountDTO account) throws EventException {
-        if(eventDTOContainsNulls(eventInformation)){
+        if(EventDTO.eventDTOContainsNulls(eventInformation, eventInformation.getCreator())){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
         }
 
-        User userExistsCheck = userDao.findByUuid(eventInformation.getCreator().getUuid());
-        if(null != userExistsCheck){
-            throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(), "The user with UUID:[" + eventInformation.getCreator().getUuid() +
-                    "] already exists in the system.");
-        }
+       if(userExists(eventInformation.getCreator().getUuid())){
+           throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(), "The user with UUID:[" + eventInformation.getCreator().getUuid() +
+                   "] already exists in the system.");
+       }
 
         User newUser = createNewUser(eventInformation, account);
         return userMapper.bindDTO(userDao.save(newUser));
+    }
+
+    @Override
+    @Transactional(rollbackFor = EventException.class)
+    public UserDTO deleteUser(EventDTO eventInformation) throws EventException {
+        if(EventDTO.eventDTOContainsNulls(eventInformation, eventInformation.getCreator())){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
+        }
+
+        User user = userDao.findByUuid(eventInformation.getCreator().getUuid());
+        if(null == user){
+            throw new EventException(ErrorCodes.USER_NOT_FOUND.getErrorCode(), "The user with UUID:[" + eventInformation.getCreator().getUuid() +
+                    "] does not exists in the system.");
+        }
+
+        userDao.delete(user.getId());
+
+        return userMapper.bindDTO(user);
+    }
+
+
+    public Boolean userExists(String uuid) {
+        User userExistsCheck = userDao.findByUuid(uuid);
+        if(null != userExistsCheck){
+            return true;
+        }
+        return false;
     }
 
 
     /**
      * To create and populate the new user
      *
-     * @param eventInformation {@link EventDTO}
-     * @param account {@link AccountDTO}
+     * @param {@link EventDTO} eventInformation
+     * @param {@link AccountDTO} account
      * @return {@link User} New User Object
      */
     private User createNewUser(EventDTO eventInformation, AccountDTO account) {
         User user = new User();
         CreatorDTO creatorDTO = eventInformation.getCreator();
 
-        user.setFirstName(Validate.notNull(creatorDTO.getAddress().getFirstName()));
-        user.setLastName(Validate.notNull(creatorDTO.getAddress().getLastName()));
-        user.setLanguage(Validate.notNull(creatorDTO.getLanguage()));
-        user.setOpenId(Validate.notNull(creatorDTO.getOpenId()));
-        user.setAttributes(Validate.notNull(creatorDTO.getAttributes()));
-        user.setCity(Validate.notNull(creatorDTO.getAddress().getCity()));
-        user.setCountry(Validate.notNull(creatorDTO.getAddress().getCountry()));
-        user.setState(Validate.notNull(creatorDTO.getAddress().getState()));
-        user.setStreet1(Validate.notNull(creatorDTO.getAddress().getStreet1()));
-        user.setStreet2(Validate.notNull(creatorDTO.getAddress().getStreet2()));
-        user.setZip(Validate.notNull(creatorDTO.getAddress().getZip()));
-        user.setAccountId(Validate.notNull(account.getId()));
-        user.setUuid(Validate.notNull(creatorDTO.getUuid()));
+        if(null != creatorDTO.getAddress().getFirstName())
+            user.setFirstName(creatorDTO.getAddress().getFirstName());
+        if(null != creatorDTO.getAddress().getLastName())
+            user.setLastName(creatorDTO.getAddress().getLastName());
+        if(null != creatorDTO.getLanguage())
+            user.setLanguage(creatorDTO.getLanguage());
+        if(null != creatorDTO.getOpenId())
+            user.setOpenId(creatorDTO.getOpenId());
+        if(null != creatorDTO.getAttributes())
+            user.setAttributes(creatorDTO.getAttributes());
+        if(null != creatorDTO.getAddress().getCity())
+            user.setCity(creatorDTO.getAddress().getCity());
+        if(null != creatorDTO.getAddress().getCountry())
+            user.setCountry(creatorDTO.getAddress().getCountry());
+        if(null != creatorDTO.getAddress().getState())
+            user.setState(creatorDTO.getAddress().getState());
+        if(null != creatorDTO.getAddress().getStreet1())
+            user.setStreet1(creatorDTO.getAddress().getStreet1());
+        if(null != creatorDTO.getAddress().getStreet2())
+            user.setStreet2(creatorDTO.getAddress().getStreet2());
+        if(null != creatorDTO.getAddress().getZip())
+            user.setZip(creatorDTO.getAddress().getZip());
+        if(null != account.getId())
+            user.setAccountId(account.getId());
+        if(null != creatorDTO.getUuid())
+            user.setUuid(creatorDTO.getUuid());
+
+        user.setOwner(true);
 
         user.setModified(new Date());
         user.setCreated(new Date());
@@ -75,18 +118,4 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * Helper method to make sure there are no null fields which cause exceptions
-     *
-     * @param eventDTO  the event object containing the details
-     * @return boolean  whether it contains null objects or not
-     */
-    private boolean eventDTOContainsNulls(EventDTO eventDTO) {
-        if(null == eventDTO || null == eventDTO.getCreator() || null == eventDTO.getMarketplace() || null == eventDTO.getPayload() ||
-                null == eventDTO.getCreator().getAddress() || null == eventDTO.getPayload().getCompany() || null == eventDTO.getPayload().getOrder()){
-            return true;
-        }else{
-            return false;
-        }
-    }
 }

@@ -4,12 +4,6 @@
           xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
-
-    <mapping map-null="false">
-        <class-a>com.shaunmccready.entity.Stock</class-a>
-        <class-b>com.shaunmccready.dto.StockDTO</class-b>
-    </mapping>
-
     <mapping map-null="false">
         <class-a>com.shaunmccready.entity.Status</class-a>
         <class-b>com.shaunmccready.dto.StatusDTO</class-b>
