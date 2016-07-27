@@ -1,7 +1,11 @@
 package com.shaunmccready.entity;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "status", schema = "account")
@@ -14,6 +18,8 @@ public class Status implements GenericEntity {
     private String name;
 
     private Date created;
+
+    private Set<Account> accounts = new HashSet<>();
 
 
     @Id
@@ -45,5 +51,14 @@ public class Status implements GenericEntity {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 }

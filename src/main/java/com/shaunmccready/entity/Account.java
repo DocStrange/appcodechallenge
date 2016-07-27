@@ -22,7 +22,7 @@ public class Account implements GenericEntity{
 
     private Integer statusId;
 
-    //private Status status;
+    private Status status;
 
     private Set<User> users = new HashSet<>();
 
@@ -58,6 +58,16 @@ public class Account implements GenericEntity{
 
     public void setAccountIdentifier(String uuid) {
         this.accountIdentifier = uuid;
+    }
+
+    @ManyToOne()
+    @JoinColumn(name = "status_id", nullable = true, insertable = false, updatable = false)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Column(name = "status_id")

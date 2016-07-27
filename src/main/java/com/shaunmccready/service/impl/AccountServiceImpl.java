@@ -43,16 +43,14 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private UserDao userDao;
 
+
     @Transactional(rollbackFor = EventException.class)
     public AccountDTO createAccount(EventDTO eventDTO) throws EventException {
         if(EventDTO.eventDTOContainsNulls(eventDTO, eventDTO.getCreator())){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
         }
 
-        if(userService.userExists(eventDTO.getCreator().getUuid())){
-            throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(), "The user with UUID:[" + eventDTO.getCreator().getUuid() +
-                    "] already exists in the system");
-        }
+        userService.checkExistingUser(eventDTO);
 
         Status status = statusDao.findByName("ACTIVE");
         Account createdAccount = createNewAccount(status.getId());

@@ -2,6 +2,7 @@ package com.shaunmccready.service;
 
 import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.dto.EventDTO;
+import com.shaunmccready.entity.User;
 import com.shaunmccready.exception.EventException;
 
 public interface AccountService {

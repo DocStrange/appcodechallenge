@@ -4,10 +4,13 @@ import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.dto.CreatorDTO;
 import com.shaunmccready.dto.EventDTO;
 import com.shaunmccready.dto.UserDTO;
+import com.shaunmccready.entity.Account;
 import com.shaunmccready.entity.ErrorCodes;
+import com.shaunmccready.entity.Status;
 import com.shaunmccready.entity.User;
 import com.shaunmccready.exception.EventException;
 import com.shaunmccready.mapper.UserMapper;
+import com.shaunmccready.repository.AccountDao;
 import com.shaunmccready.repository.UserDao;
 import com.shaunmccready.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AccountDao accountDao;
+
 
     @Override
     @Transactional(rollbackFor = EventException.class)
@@ -39,8 +45,14 @@ public class UserServiceImpl implements UserService {
                    "] already exists in the system.");
        }
 
-        User newUser = createNewUser(eventInformation, account);
-        return userMapper.bindDTO(userDao.save(newUser));
+        User user = checkExistingUser(eventInformation);
+        if(null == user){
+            user = createNewUser(eventInformation, account);
+        }else{
+            user.setAccountId(account.getId());
+        }
+
+        return userMapper.bindDTO(userDao.save(user));
     }
 
     @Override
@@ -70,6 +82,20 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+
+    public User checkExistingUser(EventDTO eventDTO) throws EventException {
+        User userCheck = userDao.findByUuid(eventDTO.getCreator().getUuid());
+        if(null != userCheck){
+            Account existingAccount = accountDao.findOne(userCheck.getAccountId());
+            Status accountStatus = existingAccount.getStatus();
+
+            if(!accountStatus.getName().equals("CANCELLED")){
+                throw new EventException(ErrorCodes.FORBIDDEN.getErrorCode(), "The user with UUID:[" + eventDTO.getCreator().getUuid() +
+                        "] already exists in the system and is associated with account id:[" + existingAccount.getAccountIdentifier() + "] which is not cancelled");
+            }
+        }
+        return userCheck;
+    }
 
     /**
      * To create and populate the new user

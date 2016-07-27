@@ -14,9 +14,11 @@
         <hibernate-version>4.3.5.Final</hibernate-version>
         <jackson-databind-version>2.4.4</jackson-databind-version>
         <jackson-mapper-asl-version>1.9.10</jackson-mapper-asl-version>
+        <java.inject.version>1</java.inject.version>
         <jaxb.version>2.1</jaxb.version>
         <junit.version>4.12</junit.version>
         <logback.version>1.0.13</logback.version>
+        <mockito.version>2.0.7-beta</mockito.version>
         <oauth.signpost.version>1.2.1.2</oauth.signpost.version>
         <postgresql.version>9.3-1102-jdbc41</postgresql.version>
         <spring.version>4.0.1.RELEASE</spring.version>
@@ -227,7 +229,16 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${java.inject.version}</version>
+        </dependency>
 
 
     </dependencies>
