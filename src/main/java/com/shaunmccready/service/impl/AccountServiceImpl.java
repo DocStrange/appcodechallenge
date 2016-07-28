@@ -46,14 +46,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional(rollbackFor = EventException.class)
     public AccountDTO createAccount(EventDTO eventDTO) throws EventException {
-        if(EventDTO.eventDTOContainsNulls(eventDTO, eventDTO.getCreator())){
+        if(null == eventDTO){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
         }
 
         userService.checkExistingUser(eventDTO);
 
         Status status = statusDao.findByName("ACTIVE");
-        Account createdAccount = createNewAccount(status.getId());
+        Account createdAccount = createNewAccount(status.getId(),eventDTO);
         accountDao.save(createdAccount);
 
         return accountMapper.bindDTO(createdAccount);
@@ -90,21 +90,43 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional(rollbackFor = EventException.class)
     public AccountDTO changeAccount(EventDTO eventDTO) throws EventException {
-        return null;
+        if(null == eventDTO.getPayload() || null == eventDTO.getPayload().getAccount() || null == eventDTO.getPayload().getOrder()){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account change");
+        }
+
+        Account uuidCheck = accountDao.findByAccountIdentifierIgnoreCase(eventDTO.getPayload().getAccount().getAccountIdentifier());
+        if (null == uuidCheck){
+            LOGGER.info("The account with uuid:[" + eventDTO.getPayload().getAccount().getAccountIdentifier() +
+                    "] does not exists in the system.");
+            throw new EventException(ErrorCodes.ACCOUNT_NOT_FOUND.getErrorCode(),"The account with uuid:[" +
+                    eventDTO.getPayload().getAccount().getAccountIdentifier() + "] does not exists in the system.");
+        }
+
+        uuidCheck.setEditionCode(eventDTO.getPayload().getOrder().getEditionCode());
+        uuidCheck.setPricingDuration(eventDTO.getPayload().getOrder().getPricingDuration());
+
+        return accountMapper.bindDTO(accountDao.save(uuidCheck));
     }
 
 
     /**
      * Helper to create and save a new account to the database
      *
-     * @param statusId the account status id
-     * @return {@link Account} new account
+     * @param statusId           the account status id
+     * @param {@link EventDTO}   Event information
+     * @return {@link Account}   new account
      */
-    private Account createNewAccount(Integer statusId) {
+    private Account createNewAccount(Integer statusId, EventDTO eventInformation) {
         Account account = new Account();
         account.setAccountIdentifier(UUID.randomUUID().toString());
         account.setNumberOfUsers(-1);
         account.setStatusId(statusId);
+
+        if(null != eventInformation.getPayload() && null != eventInformation.getPayload().getAccount() &&
+                null != eventInformation.getPayload().getAccount().getEditionCode()) {
+            account.setEditionCode(eventInformation.getPayload().getAccount().getEditionCode());
+            account.setPricingDuration(eventInformation.getPayload().getAccount().getPricingDuration());
+        }
         account.setModified(new Date());
         account.setCreated(new Date());
 

@@ -84,6 +84,10 @@ public class UserServiceImpl implements UserService {
 
 
     public User checkExistingUser(EventDTO eventDTO) throws EventException {
+        if(null == eventDTO.getCreator() || null == eventDTO.getCreator().getUuid()){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
+        }
+
         User userCheck = userDao.findByUuid(eventDTO.getCreator().getUuid());
         if(null != userCheck){
             Account existingAccount = accountDao.findOne(userCheck.getAccountId());
@@ -108,9 +112,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         CreatorDTO creatorDTO = eventInformation.getCreator();
 
-        if(null != creatorDTO.getAddress().getFirstName())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getFirstName())
             user.setFirstName(creatorDTO.getAddress().getFirstName());
-        if(null != creatorDTO.getAddress().getLastName())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getLastName())
             user.setLastName(creatorDTO.getAddress().getLastName());
         if(null != creatorDTO.getLanguage())
             user.setLanguage(creatorDTO.getLanguage());
@@ -118,17 +122,17 @@ public class UserServiceImpl implements UserService {
             user.setOpenId(creatorDTO.getOpenId());
         if(null != creatorDTO.getAttributes())
             user.setAttributes(creatorDTO.getAttributes());
-        if(null != creatorDTO.getAddress().getCity())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getCity())
             user.setCity(creatorDTO.getAddress().getCity());
-        if(null != creatorDTO.getAddress().getCountry())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getCountry())
             user.setCountry(creatorDTO.getAddress().getCountry());
-        if(null != creatorDTO.getAddress().getState())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getState())
             user.setState(creatorDTO.getAddress().getState());
-        if(null != creatorDTO.getAddress().getStreet1())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getStreet1())
             user.setStreet1(creatorDTO.getAddress().getStreet1());
-        if(null != creatorDTO.getAddress().getStreet2())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getStreet2())
             user.setStreet2(creatorDTO.getAddress().getStreet2());
-        if(null != creatorDTO.getAddress().getZip())
+        if(null != creatorDTO.getAddress() && null != creatorDTO.getAddress().getZip())
             user.setZip(creatorDTO.getAddress().getZip());
         if(null != account.getId())
             user.setAccountId(account.getId());

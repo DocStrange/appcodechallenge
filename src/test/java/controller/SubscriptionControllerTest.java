@@ -4,6 +4,7 @@ import com.shaunmccready.controller.SubscriptionController;
 import com.shaunmccready.dto.ResponseDTO;
 import com.shaunmccready.exception.EventException;
 import com.shaunmccready.service.SubscriptionService;
+import mock.MockEntities;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,33 +34,31 @@ public class SubscriptionControllerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        responseDTO = getResponseDTO();
+        responseDTO = MockEntities.getResponseDTO();
     }
 
     @Test
     public void testCreateSubscription() throws Exception {
-        when(subscriptionService.createSubscription(eq(getUrl()))).thenReturn(responseDTO);
-        ResponseDTO result = subscriptionController.createSubscription(getUrl());
+        when(subscriptionService.createSubscription(eq(MockEntities.getUrl()))).thenReturn(responseDTO);
+        ResponseDTO result = subscriptionController.createSubscription(MockEntities.getUrl());
 
-        verify(subscriptionService, times(1)).createSubscription(eq(getUrl()));
+        verify(subscriptionService, times(1)).createSubscription(eq(MockEntities.getUrl()));
         assertNotNull(result);
     }
 
 
     @Test(expected = Exception.class)
     public void testCreateSubscriptionException() throws EventException {
-        when(subscriptionService.createSubscription(eq(getUrl())))
-                .thenThrow(new EventException(anyString(),anyString()));
-
-        subscriptionController.createSubscription(getUrl());
+        doThrow(new EventException(anyString(),anyString())).when(subscriptionService.createSubscription(eq(MockEntities.getUrl())));
+        subscriptionController.createSubscription(MockEntities.getUrl());
     }
 
 
     @Test
     public void testCancelSubscription() throws Exception {
-        when(subscriptionService.cancelSubscription(getUrl())).thenReturn(responseDTO);
+        when(subscriptionService.cancelSubscription(MockEntities.getUrl())).thenReturn(responseDTO);
 
-        ResponseDTO responseDTO = subscriptionController.cancelSubscription(getUrl());
+        ResponseDTO responseDTO = subscriptionController.cancelSubscription(MockEntities.getUrl());
 
         assertNotNull(responseDTO);
         assertEquals(true,responseDTO.getSuccess());
@@ -73,18 +72,7 @@ public class SubscriptionControllerTest {
     }
 
 
-    public String getUrl(){
-        return "https://www.testurl.com";
-    }
 
-
-    public ResponseDTO getResponseDTO(){
-        ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setSuccess(true);
-        responseDTO.setAccountIdentifier("123456");
-
-        return responseDTO;
-    }
 
 
 }

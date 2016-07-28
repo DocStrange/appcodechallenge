@@ -28,6 +28,8 @@ CREATE TABLE account.account
   number_users             INTEGER,
   uuid                     TEXT NOT NULL,
   status_id                INTEGER,
+  edition_code             character varying(255),
+  pricing_duration         character varying(255),
   modified                 TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   created                  TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   CONSTRAINT account_id_pk PRIMARY KEY (account_id),

@@ -48,7 +48,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             AccountDTO account = accountService.createAccount(eventInformation);
             userService.createUser(eventInformation, account);
 
-            responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
+            responseDTO = ResponseDTO.buildSuccessResponse(account.getAccountIdentifier(), "Subscription created!");
         } catch (EventException e) {
                 responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(), e.getMessage());
         }
@@ -82,9 +82,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             String eventDetailsString = appDirectConnectionService.getEventDetails(incomingUrl);
             EventDTO eventInformation = getEventDtoFromString(eventDetailsString);
             AccountDTO account = accountService.cancelAccount(eventInformation);
-            userService.deleteUser(eventInformation);
 
-            responseDTO = ResponseDTO.buildSuccessResponse(account.getAccountIdentifier().toString(), "Subscription created!");
+            responseDTO = ResponseDTO.buildSuccessResponse(account.getAccountIdentifier().toString(), "Subscription cancelled!");
         } catch (EventException e) {
             responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
         }
@@ -102,9 +101,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             EventDTO eventInformation = getEventDtoFromString(eventDetailsString);
             AccountDTO account = accountService.changeAccount(eventInformation);
 
-            //responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
+            responseDTO = ResponseDTO.buildSuccessResponse(account.getId().toString(), "Subscription created!");
         } catch (EventException e) {
-            //responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
+            responseDTO = ResponseDTO.buildFailedResponse(e.getErrorCode(),e.getMessage());
         }
 
         return responseDTO;

@@ -26,6 +26,10 @@ public class Account implements GenericEntity{
 
     private Set<User> users = new HashSet<>();
 
+    private String editionCode;
+
+    private String pricingDuration;
+
     private Date modified;
 
     private Date created;
@@ -86,6 +90,24 @@ public class Account implements GenericEntity{
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    @Column(name = "edition_code")
+    public String getEditionCode() {
+        return editionCode;
+    }
+
+    public void setEditionCode(String editionCode) {
+        this.editionCode = editionCode;
+    }
+
+    @Column(name = "pricing_duration")
+    public String getPricingDuration() {
+        return pricingDuration;
+    }
+
+    public void setPricingDuration(String pricingDuration) {
+        this.pricingDuration = pricingDuration;
     }
 
     @Temporal(TemporalType.TIMESTAMP)

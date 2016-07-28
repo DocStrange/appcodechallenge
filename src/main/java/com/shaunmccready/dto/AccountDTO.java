@@ -16,6 +16,10 @@ public class AccountDTO extends GenericDTO {
 
     private Integer statusId;
 
+    private String editionCode;
+
+    private String pricingDuration;
+
     private Date modified;
 
     private Date created;
@@ -64,6 +68,22 @@ public class AccountDTO extends GenericDTO {
 
     public void setStatusId(Integer statusId) {
         this.statusId = statusId;
+    }
+
+    public String getEditionCode() {
+        return editionCode;
+    }
+
+    public void setEditionCode(String editionCode) {
+        this.editionCode = editionCode;
+    }
+
+    public String getPricingDuration() {
+        return pricingDuration;
+    }
+
+    public void setPricingDuration(String pricingDuration) {
+        this.pricingDuration = pricingDuration;
     }
 
     public Date getModified() {
