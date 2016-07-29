@@ -1,6 +1,10 @@
 package com.shaunmccready.dto;
 
+import com.shaunmccready.entity.User;
+
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AccountDTO extends GenericDTO {
 
@@ -15,6 +19,8 @@ public class AccountDTO extends GenericDTO {
     private String status;
 
     private Integer statusId;
+
+    private Set<User> users = new HashSet<>();
 
     private String editionCode;
 
@@ -68,6 +74,14 @@ public class AccountDTO extends GenericDTO {
 
     public void setStatusId(Integer statusId) {
         this.statusId = statusId;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public String getEditionCode() {

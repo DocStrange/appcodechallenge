@@ -5,13 +5,34 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
     <mapping map-null="false">
+        <class-a>com.shaunmccready.entity.Account</class-a>
+        <class-b>com.shaunmccready.dto.AccountDTO</class-b>
+        <field-exclude>
+            <a>status</a>
+            <b>status</b>
+        </field-exclude>
+        <field-exclude>
+            <a>users</a>
+            <b>users</b>
+        </field-exclude>
+    </mapping>
+
+    <mapping map-null="false">
         <class-a>com.shaunmccready.entity.Status</class-a>
         <class-b>com.shaunmccready.dto.StatusDTO</class-b>
+        <field-exclude>
+            <a>accounts</a>
+            <b>accounts</b>
+        </field-exclude>
     </mapping>
 
     <mapping map-null="false">
         <class-a>com.shaunmccready.entity.User</class-a>
         <class-b>com.shaunmccready.dto.UserDTO</class-b>
+        <field-exclude>
+            <a>account</a>
+            <b>account</b>
+        </field-exclude>
     </mapping>
 
 

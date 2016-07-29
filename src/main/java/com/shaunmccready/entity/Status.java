@@ -1,7 +1,5 @@
 package com.shaunmccready.entity;
 
-import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,10 +15,9 @@ public class Status implements GenericEntity {
 
     private String name;
 
-    private Date created;
-
     private Set<Account> accounts = new HashSet<>();
 
+    private Date created;
 
     @Id
     @Column(name = "status_id", unique = true, nullable = false)

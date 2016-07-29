@@ -39,7 +39,7 @@ public class UserDTO extends GenericDTO{
 
     private Integer accountId;
 
-    private AccountDTO accountDTO;
+    private AccountDTO account;
 
     private Date modified;
 
@@ -173,12 +173,12 @@ public class UserDTO extends GenericDTO{
         this.accountId = accountId;
     }
 
-    public AccountDTO getAccountDTO() {
-        return accountDTO;
+    public AccountDTO getAccount() {
+        return account;
     }
 
-    public void setAccountDTO(AccountDTO accountDTO) {
-        this.accountDTO = accountDTO;
+    public void setAccount(AccountDTO account) {
+        this.account = account;
     }
 
     public Date getModified() {
