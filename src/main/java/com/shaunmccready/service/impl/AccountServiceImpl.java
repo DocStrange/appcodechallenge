@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         User owner = userDao.findByUuid(eventDTO.getCreator().getUuid());
-        if(!String.valueOf(owner.getAccountId()).equals(uuidCheck.getAccountIdentifier())){
+        if(!owner.getAccountId().equals(uuidCheck.getId())){
             throw new EventException(ErrorCodes.UNAUTHORIZED.getErrorCode(), "Action not permitted. " +
                     "The user trying to cancel the subscription is not the owner of this account.");
         }
@@ -122,10 +122,9 @@ public class AccountServiceImpl implements AccountService {
         account.setNumberOfUsers(-1);
         account.setStatusId(statusId);
 
-        if(null != eventInformation.getPayload() && null != eventInformation.getPayload().getAccount() &&
-                null != eventInformation.getPayload().getAccount().getEditionCode()) {
-            account.setEditionCode(eventInformation.getPayload().getAccount().getEditionCode());
-            account.setPricingDuration(eventInformation.getPayload().getAccount().getPricingDuration());
+        if(null != eventInformation.getPayload() && null != eventInformation.getPayload().getOrder()) {
+            account.setEditionCode(eventInformation.getPayload().getOrder().getEditionCode());
+            account.setPricingDuration(eventInformation.getPayload().getOrder().getPricingDuration());
         }
         account.setModified(new Date());
         account.setCreated(new Date());

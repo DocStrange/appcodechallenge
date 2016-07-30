@@ -13,8 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -28,47 +27,55 @@ public class SubscriptionControllerTest {
     @Mock
     private SubscriptionService subscriptionService;
 
-    private ResponseDTO responseDTO;
+    private ResponseDTO successResponseDTO;
+    private ResponseDTO failedResponseDTO;
 
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        responseDTO = MockEntities.getResponseDTO();
+        successResponseDTO = MockEntities.getSuccessResponseDTO();
+        failedResponseDTO = MockEntities.getFailedResponseDTO();
     }
 
     @Test
     public void testCreateSubscription() throws Exception {
-        when(subscriptionService.createSubscription(eq(MockEntities.getUrl()))).thenReturn(responseDTO);
-        ResponseDTO result = subscriptionController.createSubscription(MockEntities.getUrl());
+        when(subscriptionService.createSubscription(anyString())).thenReturn(successResponseDTO);
+        ResponseDTO result = subscriptionController.createSubscription(anyString());
 
-        verify(subscriptionService, times(1)).createSubscription(eq(MockEntities.getUrl()));
+        verify(subscriptionService, times(1)).createSubscription(anyString());
         assertNotNull(result);
+        assertTrue(result.getSuccess());
     }
 
+    @Test
+    public void testCreateSubscriptionBad() throws Exception {
+        when(subscriptionService.createSubscription(anyString())).thenReturn(failedResponseDTO);
+        ResponseDTO result = subscriptionController.createSubscription(anyString());
 
-    @Test(expected = Exception.class)
-    public void testCreateSubscriptionException() throws EventException {
-        doThrow(new EventException(anyString(),anyString())).when(subscriptionService.createSubscription(eq(MockEntities.getUrl())));
-        subscriptionController.createSubscription(MockEntities.getUrl());
+        verify(subscriptionService, times(1)).createSubscription(anyString());
+        assertNotNull(result);
+        assertFalse(result.getSuccess());
     }
-
 
     @Test
     public void testCancelSubscription() throws Exception {
-        when(subscriptionService.cancelSubscription(MockEntities.getUrl())).thenReturn(responseDTO);
+        when(subscriptionService.cancelSubscription(anyString())).thenReturn(successResponseDTO);
+        ResponseDTO result = subscriptionController.cancelSubscription(anyString());
 
-        ResponseDTO responseDTO = subscriptionController.cancelSubscription(MockEntities.getUrl());
-
-        assertNotNull(responseDTO);
-        assertEquals(true,responseDTO.getSuccess());
-        assertEquals("123456",responseDTO.getAccountIdentifier());
+        verify(subscriptionService, times(1)).cancelSubscription(anyString());
+        assertNotNull(result);
+        assertTrue(result.getSuccess());
     }
 
-
     @Test
-    public void testChangeSubscription() throws Exception {
+    public void testCancelSubscriptionBad() throws Exception {
+        when(subscriptionService.cancelSubscription(anyString())).thenReturn(failedResponseDTO);
+        ResponseDTO result = subscriptionController.cancelSubscription(anyString());
 
+        verify(subscriptionService, times(1)).cancelSubscription(anyString());
+        assertNotNull(result);
+        assertFalse(result.getSuccess());
     }
 
 

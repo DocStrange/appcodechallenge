@@ -1,24 +1,40 @@
 package mock;
 
-import com.shaunmccready.dto.EventDTO;
-import com.shaunmccready.dto.ResponseDTO;
+import com.shaunmccready.dto.*;
 import com.shaunmccready.entity.Account;
+import com.shaunmccready.entity.ErrorCodes;
 import com.shaunmccready.entity.Status;
+import com.shaunmccready.entity.User;
 
 import java.util.Date;
 
 public class MockEntities {
 
-
-    public static String getUrl(){
+    public static String getGoodUrl() { return "https://www.appdirect.com/api/integration/v1/events/1596ffae-4080-4875-bcd6-4b6e6e690969"; }
+    public static String getBadUrl(){
         return "https://www.testurl.com";
     }
 
+    public static Integer ACTIVE_STATUS = 5;
+    public static String  ACTIVE_STRING = "ACTIVE";
+    public static Integer CANCELLED_STATUS = 7;
+    public static String  CANCELLED_STRING = "CANCELLED";
 
-    public static ResponseDTO getResponseDTO(){
-        ResponseDTO responseDTO = new ResponseDTO();
+
+    public static ResponseDTO getSuccessResponseDTO(){
+        final ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setSuccess(true);
         responseDTO.setAccountIdentifier("123456");
+
+        return responseDTO;
+    }
+
+
+    public static ResponseDTO getFailedResponseDTO(){
+        final ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setSuccess(false);
+        responseDTO.setErrorCode(ErrorCodes.UNKNOWN_ERROR.toString());
+        responseDTO.setMessage("the operation could not be completed. Bad data");
 
         return responseDTO;
     }
@@ -44,8 +60,13 @@ public class MockEntities {
                 "</creator><payload><account><accountIdentifier>1</accountIdentifier><status>ACTIVE</status></account><configuration/></payload></event>";
     }
 
+
+    public static String appDirectXmlResponseChange(){
+        return "";
+    }
+
     public static Status getStatus(String statusString){
-        Status status = new Status();
+        final Status status = new Status();
 
         switch(statusString.toUpperCase()){
             case "ACTIVE":
@@ -66,9 +87,9 @@ public class MockEntities {
     }
 
     public static Account getAccount(String statusString){
-        Status status = getStatus(statusString);
+        final Status status = getStatus(statusString);
 
-        Account account = new Account();
+        final Account account = new Account();
         account.setId(0);
         account.setNumberOfUsers(-1);
         account.setAccountIdentifier("unique-id-test");
@@ -82,12 +103,107 @@ public class MockEntities {
         return account;
     }
 
-    public static EventDTO getCreatedEventDTO(){
-        EventDTO eventDTO = new EventDTO();
+    public static EventDTO getCreatedEventDTO(Integer status){
+        final EventDTO eventDTO = new EventDTO();
         eventDTO.setType("SUBSCRIPTION_ORDER");
-
-        //TODO: continue filling in...
+        eventDTO.setMarketplace(getMarketPlaceDTO());
+        eventDTO.setCreator(getCreatorDTO());
+        eventDTO.setPayload(getPayloadDTO(status));
         return eventDTO;
+    }
+
+    public static MarketplaceDTO getMarketPlaceDTO(){
+        final MarketplaceDTO marketplaceDTO = new MarketplaceDTO();
+        marketplaceDTO.setBaseUrl("https://www.appdirect.com");
+        marketplaceDTO.setPartner("APPDIRECT");
+        return marketplaceDTO;
+    }
+
+    public static CreatorDTO getCreatorDTO(){
+        final CreatorDTO creatorDTO = new CreatorDTO();
+        creatorDTO.setAddress(getAddressDTO());
+        creatorDTO.setLastName("McCready");
+        creatorDTO.setFirstName("Shaun");
+        creatorDTO.setEmail("test@test.com");
+        creatorDTO.setLanguage("EN");
+        creatorDTO.setOpenId("test");
+        creatorDTO.setUuid("unique-creator-id");
+        return creatorDTO;
+    }
+
+    public static AddressDTO getAddressDTO(){
+        final AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setFirstName("Shaun");
+        addressDTO.setLastName("McCready");
+        addressDTO.setFullName("Shaun McCready");
+        return addressDTO;
+    }
+
+    public static PayloadDTO getPayloadDTO(Integer status){
+        final PayloadDTO payloadDTO = new PayloadDTO();
+        payloadDTO.setCompany(getCompanyDTO());
+        payloadDTO.setOrder(getOrderDTO());
+        payloadDTO.setAccount(getAccountDTO(status));
+        return payloadDTO;
+    }
+
+    public static CompanyDTO getCompanyDTO(){
+        final CompanyDTO companyDTO = new CompanyDTO();
+        companyDTO.setCountry("US");
+        companyDTO.setName("Shaun Test Industries");
+        companyDTO.setPhoneNumber("514-555-1234");
+        companyDTO.setUuid("unique-company-id");
+        companyDTO.setWebsite("www.test.com");
+        return companyDTO;
+    }
+
+    public static OrderDTO getOrderDTO(){
+        final OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setEditionCode("FREE");
+        orderDTO.setPricingDuration("MONTHLY");
+        return orderDTO;
+    }
+
+    public static AccountDTO getAccountDTO(Integer status){
+        final AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setId(0);
+        accountDTO.setCreated(new Date());
+        accountDTO.setModified(new Date());
+        accountDTO.setPricingDuration("MONTHLY");
+        accountDTO.setEditionCode("FREE");
+        accountDTO.setAccountIdentifier("unique-account-id");
+        accountDTO.setNumberOfUsers(-1);
+        accountDTO.setStatusId(status);
+        return accountDTO;
+    }
+
+
+    public static UserDTO getUserDTO(final AccountDTO dto){
+        final UserDTO userDTO = new UserDTO();
+        userDTO.setCreated(new Date());
+        userDTO.setAccountId(0);
+        userDTO.setAccount(dto);
+        userDTO.setLastName("McCready");
+        userDTO.setFirstName("Shaun");
+        userDTO.setEmail("test@test.com");
+        userDTO.setLanguage("EN");
+        userDTO.setOpenId("test");
+        userDTO.setUuid("unique-user-id");
+        return userDTO;
+    }
+
+    public static User getUser(final Account account){
+        final User user = new User();
+        user.setCreated(new Date());
+        user.setAccountId(0);
+        user.setAccount(account);
+        user.setLastName("McCready");
+        user.setFirstName("Shaun");
+        user.setEmail("test@test.com");
+        user.setLanguage("EN");
+        user.setOpenId("test");
+        user.setUuid("unique-user-id");
+        return user;
     }
 
 }

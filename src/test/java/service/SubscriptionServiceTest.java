@@ -1,25 +1,28 @@
 package service;
 
+import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.dto.ResponseDTO;
+import com.shaunmccready.dto.UserDTO;
 import com.shaunmccready.service.AccountService;
 import com.shaunmccready.service.AppDirectConnectionService;
-import com.shaunmccready.service.SubscriptionService;
 import com.shaunmccready.service.UserService;
 import com.shaunmccready.service.impl.SubscriptionServiceImpl;
 import mock.MockEntities;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SubscriptionServiceTest {
 
     @InjectMocks
@@ -34,32 +37,46 @@ public class SubscriptionServiceTest {
     @Mock
     private UserService userService;
 
-    private ResponseDTO responseDTO;
+    private ResponseDTO successResponseDTO;
+    private ResponseDTO failedResponseDTO;
 
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        responseDTO = MockEntities.getResponseDTO();
     }
 
 
     @Test
     public void testCreateSubscription() throws Exception {
-        when(appDirectConnectionService.getEventDetails(eq(MockEntities.getUrl()))).thenReturn(MockEntities.appDirectXmlResponseCreate());
-        //verify(appDirectConnectionService, times(1)).getEventDetails(eq(MockEntities.getUrl()));
-//        when(accountService.createAccount(eq(MockEntities.))).thenReturn(MockEntities.getAccount("ACTIVE"));
+        when(appDirectConnectionService.getEventDetails(anyString()))
+                .thenReturn(MockEntities.appDirectXmlResponseCreate());
+        when(accountService.createAccount(any()))
+                .thenReturn(MockEntities.getAccountDTO(MockEntities.ACTIVE_STATUS));
+        when(userService.createUser(any(),any()))
+                .thenReturn(MockEntities.getUserDTO(MockEntities.getAccountDTO(MockEntities.ACTIVE_STATUS)));
 
 
-        ResponseDTO subscription = subscriptionServiceImpl.createSubscription(MockEntities.getUrl());
-
+        ResponseDTO subscription = subscriptionServiceImpl.createSubscription(MockEntities.getGoodUrl());
         assertNotNull(subscription);
-
+        assertTrue(subscription.getSuccess());
+        assertEquals(subscription.getAccountIdentifier(), "unique-account-id");
+        assertEquals(subscription.getMessage(), "Subscription created!");
     }
+
 
     @Test
     public void testCancelSubscription() throws Exception {
+        when(appDirectConnectionService.getEventDetails(anyString()))
+                .thenReturn(MockEntities.appDirectXmlResponseCreate());
+        when(accountService.cancelAccount(any()))
+                .thenReturn(MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS));
 
+        ResponseDTO subscription = subscriptionServiceImpl.cancelSubscription(MockEntities.getGoodUrl());
+        assertNotNull(subscription);
+        assertTrue(subscription.getSuccess());
+        assertEquals(subscription.getAccountIdentifier(), "unique-account-id");
+        assertEquals(subscription.getMessage(), "Subscription cancelled!");
     }
 
     @Test

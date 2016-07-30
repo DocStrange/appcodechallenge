@@ -38,7 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private UserService userService;
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO createSubscription(String incomingUrl)  {
         ResponseDTO responseDTO;
 
@@ -74,7 +74,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO cancelSubscription(String incomingUrl) {
         ResponseDTO responseDTO;
 
@@ -92,7 +92,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO changeSubscription(String incomingUrl) {
         ResponseDTO responseDTO = null;
 

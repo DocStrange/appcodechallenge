@@ -36,14 +36,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = EventException.class)
     public UserDTO createUser(EventDTO eventInformation, AccountDTO account) throws EventException {
-        if(EventDTO.eventDTOContainsNulls(eventInformation, eventInformation.getCreator())){
-            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
+        if(null == eventInformation || null == eventInformation.getCreator()){
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing complete details for Account creation.");
         }
-
-       if(userExists(eventInformation.getCreator().getUuid())){
-           throw new EventException(ErrorCodes.USER_ALREADY_EXISTS.getErrorCode(), "The user with UUID:[" + eventInformation.getCreator().getUuid() +
-                   "] already exists in the system.");
-       }
 
         User user = checkExistingUser(eventInformation);
         if(null == user){
@@ -85,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     public User checkExistingUser(EventDTO eventDTO) throws EventException {
         if(null == eventDTO.getCreator() || null == eventDTO.getCreator().getUuid()){
-            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
+            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing complete details for Account creation.");
         }
 
         User userCheck = userDao.findByUuid(eventDTO.getCreator().getUuid());
