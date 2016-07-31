@@ -24,7 +24,7 @@ To test this application go to http://shaunmccready.com:8080/api/
 Download the source code. You must use a build tool such as maven and run the command:
     mvn clean install
 
-This will produce a WAR file for deployment. It is located in the /target folder within the root folder of the project.
+This will produce a WAR file for deployment. It is located in the /target folder within the root folder of the project. Rename this file to api.war.
 This file must be deployed in a container such as Tomcat.  Once that is done, you run the server.
 
 After the server starts up go to this address in your browser:
