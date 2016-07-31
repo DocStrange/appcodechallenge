@@ -2,7 +2,11 @@
         "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
-<web-app>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
     <display-name>Shauns AppDirect API Web Application</display-name>
 
     <servlet>
@@ -29,6 +33,17 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <error-page>
+        <!-- Page not found -->
+        <error-code>404</error-code>
+        <location>/error404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <!-- Uncaught Exceptions -->
+        <error-code>500</error-code>
+        <location>/error500.jsp</location>
+    </error-page>
 
 
 </web-app>

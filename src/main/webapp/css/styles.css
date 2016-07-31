@@ -1,0 +1,30 @@
+* {
+    border: 0;
+    margin: 0;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+h2 {
+    font-size: 31.5px;
+}
+
+h3 {
+    font-size: 24.5px;
+}
+
+.error {
+    text-align: center;
+}
+
+.details {
+    text-align: center;
+}
+
+p {
+    font-family: Verdana;
+    font-size: 28px;
+}
+
+ul {
+    list-style-type: circle;
+}
