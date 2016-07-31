@@ -21,16 +21,6 @@ public interface UserService {
 
 
     /**
-     * Remove user from system
-     *
-     * @param eventInformation
-     * @return {@link UserDTO}
-     * @throws EventException
-     */
-    public UserDTO deleteUser(EventDTO eventInformation) throws EventException;
-
-
-    /**
      * Helper to check if the user already exists in the system
      *
      * @param uuid id of the user

@@ -77,7 +77,25 @@ public class SubscriptionControllerTest {
     }
 
 
+    @Test
+    public void testChangeSubscription() throws Exception {
+        when(subscriptionService.changeSubscription(anyString())).thenReturn(successResponseDTO);
+        ResponseDTO result = subscriptionController.changeSubscription(anyString());
 
+        verify(subscriptionService, times(1)).changeSubscription(anyString());
+        assertNotNull(result);
+        assertTrue(result.getSuccess());
+    }
+
+    @Test
+    public void testChangeSubscriptionBad() throws Exception {
+        when(subscriptionService.changeSubscription(anyString())).thenReturn(failedResponseDTO);
+        ResponseDTO result = subscriptionController.changeSubscription(anyString());
+
+        verify(subscriptionService, times(1)).changeSubscription(anyString());
+        assertNotNull(result);
+        assertFalse(result.getSuccess());
+    }
 
 
 }

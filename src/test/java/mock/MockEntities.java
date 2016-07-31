@@ -69,7 +69,7 @@ public class MockEntities {
                 "<configuration/><order><editionCode>BASIC</editionCode><pricingDuration>QUARTERLY</pricingDuration></order></payload></event>";
     }
 
-    public static String appDirectXmlReponseAssign() {
+    public static String appDirectXmlResponseAssign() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>USER_ASSIGNMENT</type>" +
                 "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
                 "<firstName>Shaun</firstName><fullName>Shaun McCready</fullName><lastName>McCready</lastName></address><email>shaunwmccready@gmail.com</email>" +
@@ -81,7 +81,7 @@ public class MockEntities {
                 "</payload></event>";
     }
 
-    public static String appDirectXmlReponseUnassign() {
+    public static String appDirectXmlResponseUnassign() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>USER_UNASSIGNMENT</type>" +
                 "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
                 "<firstName>Shaun</firstName><fullName>Shaun McCready</fullName><lastName>McCready</lastName></address><email>shaunwmccready@gmail.com</email>" +
@@ -194,6 +194,7 @@ public class MockEntities {
         payloadDTO.setCompany(getCompanyDTO());
         payloadDTO.setOrder(getOrderDTO());
         payloadDTO.setAccount(getAccountDTO(status));
+        payloadDTO.setUser(getUserDTO(getAccountDTO(status)));
         return payloadDTO;
     }
 

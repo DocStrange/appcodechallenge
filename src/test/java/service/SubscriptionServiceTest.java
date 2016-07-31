@@ -60,7 +60,7 @@ public class SubscriptionServiceTest {
     @Test
     public void testCancelSubscription() throws Exception {
         when(appDirectConnectionService.getEventDetails(anyString()))
-                .thenReturn(MockEntities.appDirectXmlResponseCreate());
+                .thenReturn(MockEntities.appDirectXmlResponseCancel());
         when(accountService.cancelAccount(any()))
                 .thenReturn(MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS));
 
@@ -73,6 +73,13 @@ public class SubscriptionServiceTest {
 
     @Test
     public void testChangeSubscription() throws Exception {
+        when(appDirectConnectionService.getEventDetails(anyString()))
+                .thenReturn(MockEntities.appDirectXmlResponseChange());
+        when(accountService.changeAccount(any()))
+                .thenReturn(MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS));
 
+        ResponseDTO subscription = subscriptionServiceImpl.changeSubscription(MockEntities.getGoodUrl());
+        assertNotNull(subscription);
+        assertTrue(subscription.getSuccess());
     }
 }

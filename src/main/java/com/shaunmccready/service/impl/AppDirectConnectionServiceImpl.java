@@ -97,4 +97,11 @@ public class AppDirectConnectionServiceImpl implements AppDirectConnectionServic
         return value;
     }
 
+    public void setOauthKey(String key){
+        oauthKey = key;
+    }
+
+    public void setOauthSecret(String secret){
+        oauthSecret = secret;
+    }
 }

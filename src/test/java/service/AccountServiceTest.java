@@ -1,6 +1,8 @@
 package service;
 
 import com.shaunmccready.dto.AccountDTO;
+import com.shaunmccready.dto.EventDTO;
+import com.shaunmccready.entity.Account;
 import com.shaunmccready.exception.EventException;
 import com.shaunmccready.mapper.AccountMapper;
 import com.shaunmccready.repository.AccountDao;
@@ -78,5 +80,31 @@ public class AccountServiceTest {
         assertEquals(Integer.valueOf(7), result.getStatusId());
     }
 
+    @Test
+    public void testChangeAccount() throws EventException {
+        Account account = MockEntities.getAccount(MockEntities.ACTIVE_STRING);
+        Account modifiedAccount = MockEntities.getAccount(MockEntities.ACTIVE_STRING);
+        modifiedAccount.setEditionCode("WEEKLY");
+        modifiedAccount.setPricingDuration("YEARLY");
+
+        AccountDTO accountDTO = MockEntities.getAccountDTO(MockEntities.ACTIVE_STATUS);
+        accountDTO.setEditionCode("WEEKLY");
+        accountDTO.setPricingDuration("YEARLY");
+
+        EventDTO eventDTO = MockEntities.getCreatedEventDTO(MockEntities.ACTIVE_STATUS);
+        eventDTO.getPayload().getOrder().setEditionCode("WEEKLY");
+        eventDTO.getPayload().getOrder().setPricingDuration("YEARLY");
+
+
+        when(accountDao.findByAccountIdentifierIgnoreCase(anyString())).thenReturn(account);
+        when(accountDao.save(MockEntities.getAccount(MockEntities.ACTIVE_STRING))).thenReturn(modifiedAccount);
+        when(accountMapper.bindDTO(any())).thenReturn(accountDTO);
+
+        AccountDTO result = accountServiceImpl.changeAccount(eventDTO);
+        assertNotNull(result);
+        assertEquals(Integer.valueOf(5), result.getStatusId());
+        assertEquals(result.getEditionCode(), "WEEKLY");
+        assertEquals(result.getPricingDuration(), "YEARLY");
+    }
 
 }

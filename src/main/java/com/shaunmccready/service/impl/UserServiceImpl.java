@@ -59,31 +59,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.bindDTO(userDao.save(user));
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UserDTO deleteUser(EventDTO eventInformation) throws EventException {
-        if(null == eventInformation || null == eventInformation.getCreator()){
-            throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "No details were given for Account creation");
-        }
-
-        User user = userDao.findByUuid(eventInformation.getCreator().getUuid());
-        if(null == user){
-            throw new EventException(ErrorCodes.USER_NOT_FOUND.getErrorCode(), "The user with UUID:[" + eventInformation.getCreator().getUuid() +
-                    "] does not exists in the system.");
-        }
-
-        userDao.delete(user.getId());
-
-        return userMapper.bindDTO(user);
-    }
-
 
     public Boolean userExists(String uuid) {
         User userExistsCheck = userDao.findByUuid(uuid);
-        if(null != userExistsCheck){
-            return true;
-        }
-        return false;
+        return null != userExistsCheck;
     }
 
 
@@ -166,7 +145,6 @@ public class UserServiceImpl implements UserService {
             user.setAccountId(null);
             user.setModified(new Date());
             userDao.save(user);
-
 
             responseDTO = ResponseDTO.buildSuccessResponse(null, "User unassigned!");
         } catch (EventException e) {
