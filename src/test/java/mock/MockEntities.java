@@ -50,7 +50,6 @@ public class MockEntities {
                 "</company><configuration/><order><editionCode>FREE</editionCode><pricingDuration>MONTHLY</pricingDuration></order></payload></event>";
     }
 
-
     public static String appDirectXmlResponseCancel(){
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>SUBSCRIPTION_CANCEL</type>" +
                 "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
@@ -60,10 +59,40 @@ public class MockEntities {
                 "</creator><payload><account><accountIdentifier>1</accountIdentifier><status>ACTIVE</status></account><configuration/></payload></event>";
     }
 
-
     public static String appDirectXmlResponseChange(){
-        return "";
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>SUBSCRIPTION_CHANGE</type>" +
+                "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
+                "<firstName>Shaun</firstName><fullName>Shaun McCready</fullName><lastName>McCready</lastName></address><email>shaunwmccready@gmail.com</email>" +
+                "<firstName>Shaun</firstName><language>en</language><lastName>McCready</lastName>" +
+                "<openId>https://www.appdirect.com/openid/id/59455f79-b290-4449-a575-2d6464acdd72</openId><uuid>59455f79-b290-4449-a575-2d6464acdd72</uuid>" +
+                "</creator><payload><account><accountIdentifier>dfe47c53-a044-4084-84e9-80f3608fe8ec</accountIdentifier><status>ACTIVE</status></account>" +
+                "<configuration/><order><editionCode>BASIC</editionCode><pricingDuration>QUARTERLY</pricingDuration></order></payload></event>";
     }
+
+    public static String appDirectXmlReponseAssign() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>USER_ASSIGNMENT</type>" +
+                "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
+                "<firstName>Shaun</firstName><fullName>Shaun McCready</fullName><lastName>McCready</lastName></address><email>shaunwmccready@gmail.com</email>" +
+                "<firstName>Shaun</firstName><language>en</language><lastName>McCready</lastName>" +
+                "<openId>https://www.appdirect.com/openid/id/59455f79-b290-4449-a575-2d6464acdd72</openId><uuid>59455f79-b290-4449-a575-2d6464acdd72</uuid>" +
+                "</creator><payload><account><accountIdentifier>dfe47c53-a044-4084-84e9-80f3608fe8ec</accountIdentifier><status>ACTIVE</status></account>" +
+                "<configuration/><user><email>djdoctorstrange@hotmail.com</email><firstName>George</firstName><language>en</language><lastName>Michael</lastName>" +
+                "<openId>https://www.appdirect.com/openid/id/789952e9-1a01-4a5b-a9f8-4039b328e4b2</openId><uuid>789952e9-1a01-4a5b-a9f8-4039b328e4b2</uuid></user>" +
+                "</payload></event>";
+    }
+
+    public static String appDirectXmlReponseUnassign() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><event xmlns:atom=\"http://www.w3.org/2005/Atom\"><type>USER_UNASSIGNMENT</type>" +
+                "<marketplace><baseUrl>https://www.appdirect.com</baseUrl><partner>APPDIRECT</partner></marketplace><flag>DEVELOPMENT</flag><creator><address>" +
+                "<firstName>Shaun</firstName><fullName>Shaun McCready</fullName><lastName>McCready</lastName></address><email>shaunwmccready@gmail.com</email>" +
+                "<firstName>Shaun</firstName><language>en</language><lastName>McCready</lastName>" +
+                "<openId>https://www.appdirect.com/openid/id/59455f79-b290-4449-a575-2d6464acdd72</openId><uuid>59455f79-b290-4449-a575-2d6464acdd72</uuid>" +
+                "</creator><payload><account><accountIdentifier>dfe47c53-a044-4084-84e9-80f3608fe8ec</accountIdentifier><status>ACTIVE</status></account>" +
+                "<configuration/><user><email>djdoctorstrange@hotmail.com</email><firstName>George</firstName><language>en</language><lastName>Michael</lastName>" +
+                "<openId>https://www.appdirect.com/openid/id/789952e9-1a01-4a5b-a9f8-4039b328e4b2</openId><uuid>789952e9-1a01-4a5b-a9f8-4039b328e4b2</uuid></user>" +
+                "</payload></event>";
+    }
+
 
     public static Status getStatus(String statusString){
         final Status status = new Status();

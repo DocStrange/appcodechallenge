@@ -18,13 +18,6 @@ public class StatusController {
     private StatusService statusService;
 
 
-    @RequestMapping( method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public StatusDTO getStatusList(){
-        //TODO: Return All statuses
-        return null;
-
-    }
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public StatusDTO getStatus(
             @PathVariable("id") Integer sid) throws Exception {

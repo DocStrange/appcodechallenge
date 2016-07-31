@@ -2,10 +2,11 @@ package com.shaunmccready.mapper;
 
 import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.entity.Account;
-import com.shaunmccready.repository.StatusDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * A class used to Map an Account Entity to the respective DTO and vice versa
+ */
 @Component
 public class AccountMapper extends GenericMapper<AccountDTO,Account>{
 

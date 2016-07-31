@@ -44,13 +44,13 @@ public class AccountServiceImpl implements AccountService {
     private UserDao userDao;
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public AccountDTO createAccount(EventDTO eventDTO) throws EventException {
         if(null == eventDTO){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account creation");
         }
 
-        userService.checkExistingUser(eventDTO);
+        userService.checkExistingInactiveUser(eventDTO);
 
         Status status = statusDao.findByName("ACTIVE");
         Account createdAccount = createNewAccount(status.getId(),eventDTO);
@@ -60,9 +60,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public AccountDTO cancelAccount(EventDTO eventDTO) throws EventException {
-        if(EventDTO.eventDTOContainsNulls(eventDTO.getPayload().getAccount(), eventDTO.getCreator())){
+        if(null == eventDTO.getPayload() || null == eventDTO.getPayload().getAccount() || null == eventDTO.getCreator()){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account cancellation");
         }
 
@@ -82,13 +82,14 @@ public class AccountServiceImpl implements AccountService {
 
         Status status = statusDao.findByName("CANCELLED");
         uuidCheck.setStatusId(status.getId());
+        uuidCheck.setModified(new Date());
         accountDao.save(uuidCheck);
 
         return accountMapper.bindDTO(uuidCheck);
     }
 
 
-    @Transactional(rollbackFor = EventException.class)
+    @Transactional(rollbackFor = Exception.class)
     public AccountDTO changeAccount(EventDTO eventDTO) throws EventException {
         if(null == eventDTO.getPayload() || null == eventDTO.getPayload().getAccount() || null == eventDTO.getPayload().getOrder()){
             throw new EventException(ErrorCodes.UNKNOWN_ERROR.getErrorCode(), "Missing details for Account change");
@@ -104,6 +105,7 @@ public class AccountServiceImpl implements AccountService {
 
         uuidCheck.setEditionCode(eventDTO.getPayload().getOrder().getEditionCode());
         uuidCheck.setPricingDuration(eventDTO.getPayload().getOrder().getPricingDuration());
+        uuidCheck.setModified(new Date());
 
         return accountMapper.bindDTO(accountDao.save(uuidCheck));
     }

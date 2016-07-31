@@ -1,5 +1,6 @@
 package com.shaunmccready.service;
 
+import com.shaunmccready.dto.EventDTO;
 import com.shaunmccready.exception.EventException;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,12 @@ public interface AppDirectConnectionService {
      */
     public String getEventDetails(String incomingUrl) throws EventException;
 
-
+    /**
+     * Marshall a string representing an event to an EventDTO object
+     *
+     * @param eventDetails
+     * @return
+     * @throws EventException
+     */
+    public EventDTO getEventDtoFromString(String eventDetails) throws EventException;
 }

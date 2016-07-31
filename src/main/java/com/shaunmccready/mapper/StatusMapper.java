@@ -4,6 +4,9 @@ import com.shaunmccready.dto.StatusDTO;
 import com.shaunmccready.entity.Status;
 import org.springframework.stereotype.Component;
 
+/**
+ * A class used to Map a Status Entity to the respective DTO and vice versa
+ */
 @Component
 public class StatusMapper extends GenericMapper<StatusDTO,Status>{
 

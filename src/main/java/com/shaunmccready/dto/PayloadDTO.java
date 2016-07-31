@@ -9,6 +9,8 @@ public class PayloadDTO {
 
     private OrderDTO order;
 
+    private UserDTO user;
+
     public AccountDTO getAccount() {
         return account;
     }
@@ -31,5 +33,13 @@ public class PayloadDTO {
 
     public void setOrder(OrderDTO order) {
         this.order = order;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

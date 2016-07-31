@@ -44,20 +44,4 @@ public class EventDTO {
     public void setPayload(PayloadDTO payload) {
         this.payload = payload;
     }
-
-
-    /**
-     * Helper method to make sure there are no null fields which cause exceptions
-     *
-     * @param dtos
-     * @return
-     */
-    public static boolean eventDTOContainsNulls(Object... dtos) {
-        for(Object obj : dtos){
-            if(null == obj){
-                return true;
-            }
-        }
-        return false;
-    }
 }

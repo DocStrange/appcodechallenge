@@ -3,6 +3,7 @@ package com.shaunmccready.service;
 
 import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.dto.EventDTO;
+import com.shaunmccready.dto.ResponseDTO;
 import com.shaunmccready.dto.UserDTO;
 import com.shaunmccready.entity.User;
 import com.shaunmccready.exception.EventException;
@@ -14,7 +15,7 @@ public interface UserService {
      *
      * @param {@link EventDTO} eventInformation
      * @param {@link AccountDTO} account
-     * @return
+     * @return {@link UserDTO}
      */
     public UserDTO createUser(EventDTO eventInformation, AccountDTO account) throws EventException;
 
@@ -23,7 +24,7 @@ public interface UserService {
      * Remove user from system
      *
      * @param eventInformation
-     * @return
+     * @return {@link UserDTO}
      * @throws EventException
      */
     public UserDTO deleteUser(EventDTO eventInformation) throws EventException;
@@ -41,10 +42,29 @@ public interface UserService {
     /**
      * Checks to see if a user exists in the system with a cancelled account
      *
-     * @param eventDTO
-     * @return
+     * @param {@link EvenDTO} eventDTO
+     * @return {@link User}
      * @throws EventException
      */
-    public User checkExistingUser(EventDTO eventDTO) throws EventException;
+    public User checkExistingInactiveUser(EventDTO eventDTO) throws EventException;
+
+    /**
+     * Assigns a user to an account
+     *
+     * @param eventUrl
+     * @return {@link ResponseDTO}
+     * @throws EventException
+     */
+    public ResponseDTO assignUser(String eventUrl) throws EventException;
+
+    /**
+     * Unassigns a user from an account
+     *
+     * @param eventUrl
+     * @return {@link ResponseDTO}
+     * @throws EventException
+     */
+    public ResponseDTO unassignUser(String eventUrl) throws EventException;
+
 
 }

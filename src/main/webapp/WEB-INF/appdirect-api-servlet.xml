@@ -27,7 +27,7 @@
     <!-- DISCOVER ALL JPA REPOSITORIES -->
     <jpa:repositories base-package="com.shaunmccready.repository"/>
 
-    <!--  THESE TWO LINES ALLOW REQUESTMAPPING AND MVC RELATED ANNOTATIONS TO WORK-->
+    <!--  THESE TWO LINES ALLOW REQUEST MAPPING AND MVC RELATED ANNOTATIONS TO WORK-->
     <mvc:annotation-driven />
     <mvc:default-servlet-handler />
 

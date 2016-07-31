@@ -47,7 +47,7 @@ public class UserServiceTest {
                 .thenReturn(MockEntities.getUserDTO(MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS)));
         when(userDao.save(MockEntities.getUser(MockEntities.getAccount(MockEntities.CANCELLED_STRING))))
                 .thenReturn(MockEntities.getUser(MockEntities.getAccount(MockEntities.CANCELLED_STRING)));
-        when(userServiceImpl.checkExistingUser(MockEntities.getCreatedEventDTO(MockEntities.CANCELLED_STATUS)))
+        when(userServiceImpl.checkExistingInactiveUser(MockEntities.getCreatedEventDTO(MockEntities.CANCELLED_STATUS)))
                 .thenReturn(MockEntities.getUser(MockEntities.getAccount(MockEntities.CANCELLED_STRING)));
         when(accountDao.findOne(anyInt()))
                 .thenReturn(MockEntities.getAccount(MockEntities.CANCELLED_STRING));
@@ -56,7 +56,6 @@ public class UserServiceTest {
 
 
         UserDTO user = userServiceImpl.createUser(MockEntities.getCreatedEventDTO(MockEntities.ACTIVE_STATUS), MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS));
-
         assertNotNull(user);
 
     }

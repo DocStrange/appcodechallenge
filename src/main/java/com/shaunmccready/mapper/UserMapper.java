@@ -4,6 +4,9 @@ import com.shaunmccready.dto.UserDTO;
 import com.shaunmccready.entity.User;
 import org.springframework.stereotype.Component;
 
+/**
+ * A class used to Map a User Entity to the respective DTO and vice versa
+ */
 @Component
 public class UserMapper extends GenericMapper<UserDTO, User> {
 

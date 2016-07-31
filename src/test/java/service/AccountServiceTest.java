@@ -16,11 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountServiceTest {
@@ -51,7 +50,7 @@ public class AccountServiceTest {
 
     @Test
     public void testCreateAccount() throws EventException {
-        when(userService.checkExistingUser(any())).thenReturn(MockEntities.getUser(MockEntities.getAccount(MockEntities.ACTIVE_STRING)));
+        when(userService.checkExistingInactiveUser(any())).thenReturn(MockEntities.getUser(MockEntities.getAccount(MockEntities.ACTIVE_STRING)));
         when(statusDao.findByName(MockEntities.ACTIVE_STRING)).thenReturn(MockEntities.getStatus(MockEntities.ACTIVE_STRING));
         when(accountDao.save(MockEntities.getAccount(MockEntities.ACTIVE_STRING))).thenReturn(MockEntities.getAccount(MockEntities.ACTIVE_STRING));
         when(accountMapper.bindDTO(any())).thenReturn(MockEntities.getAccountDTO(MockEntities.ACTIVE_STATUS));
