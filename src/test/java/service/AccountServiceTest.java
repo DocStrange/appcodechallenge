@@ -65,4 +65,19 @@ public class AccountServiceTest {
         assertEquals(result.getNumberOfUsers(), Integer.valueOf(-1));
     }
 
+
+    @Test
+    public void testCancelAccount() throws EventException {
+        when(accountDao.findByAccountIdentifierIgnoreCase(anyString())).thenReturn(MockEntities.getAccount(MockEntities.ACTIVE_STRING));
+        when(userDao.findByUuid(anyString())).thenReturn(MockEntities.getUser(MockEntities.getAccount(MockEntities.ACTIVE_STRING)));
+        when(statusDao.findByName(anyString())).thenReturn(MockEntities.getStatus(MockEntities.CANCELLED_STRING));
+        when(accountDao.save(MockEntities.getAccount(MockEntities.CANCELLED_STRING))).thenReturn(MockEntities.getAccount(MockEntities.CANCELLED_STRING));
+        when(accountMapper.bindDTO(any())).thenReturn(MockEntities.getAccountDTO(MockEntities.CANCELLED_STATUS));
+
+        AccountDTO result = accountServiceImpl.cancelAccount(MockEntities.getCreatedEventDTO(MockEntities.CANCELLED_STATUS));
+        assertNotNull(result);
+        assertEquals(Integer.valueOf(7), result.getStatusId());
+    }
+
+
 }

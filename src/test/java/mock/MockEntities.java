@@ -86,6 +86,27 @@ public class MockEntities {
         return status;
     }
 
+    public static StatusDTO getStatusDTO(String statusString){
+        final StatusDTO status = new StatusDTO();
+
+        switch(statusString.toUpperCase()){
+            case "ACTIVE":
+                status.setId(5);
+                status.setName("ACTIVE");
+                break;
+            case "CANCELLED":
+                status.setId(7);
+                status.setName("CANCELLED");
+                break;
+            default:
+                status.setId(1);
+                status.setName("INITIALIZED");
+                break;
+        }
+
+        return status;
+    }
+
     public static Account getAccount(String statusString){
         final Status status = getStatus(statusString);
 

@@ -1,8 +1,6 @@
 package service;
 
-import com.shaunmccready.dto.AccountDTO;
 import com.shaunmccready.dto.ResponseDTO;
-import com.shaunmccready.dto.UserDTO;
 import com.shaunmccready.service.AccountService;
 import com.shaunmccready.service.AppDirectConnectionService;
 import com.shaunmccready.service.UserService;
@@ -16,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,9 +31,6 @@ public class SubscriptionServiceTest {
 
     @Mock
     private UserService userService;
-
-    private ResponseDTO successResponseDTO;
-    private ResponseDTO failedResponseDTO;
 
 
     @Before
