@@ -23,8 +23,6 @@ public class AppDirectConnectionServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        appDirectConnectionServiceImpl.setOauthKey("test key");
-        appDirectConnectionServiceImpl.setOauthSecret("test secret");
     }
 
 
